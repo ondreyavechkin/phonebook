@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>Phonebook</h:head>
+<h:body>
+    <h:form id="form">
+        <div class="card crud-demo">
+            <p:growl id="messages" showDetail="true"/>
+
+            <p:toolbar>
+                <p:toolbarGroup>
+                    <p:commandButton value="New" icon="pi pi-plus" actionListener="#{contactBean.openNew}"
+                                     update=":form:manage-contact-content" oncomplete="PF('manageContactDialog').show()"
+                                     styleClass="ui-button-success" style="margin-right: .5rem">
+                        <p:resetInput target=":form:manage-contact-content"/>
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:dataTable id="dt-contacts" widgetVar="dtContacts" var="contact" value="#{contactBean.contacts}"
+                         reflow="true" styleClass="contacts-table"
+                         disabledSelection="true" rowKey="#{contactBean.mobilePhone}" paginator="true"
+                         rows="3" paginatorPosition="bottom">
+                <f:facet name="header">
+                    <div class="contacts-table-header">
+                        <span style="font-weight: bold">CONTACTS</span>
+                    </div>
+                </f:facet>
+
+                <p:column headerText="First Name" filterBy="#{contact.firstName}">
+                    <h:outputText value="#{contact.firstName}"/>
+                </p:column>
+                <p:column headerText="Last Name" filterBy="#{contact.lastName}">
+                    <h:outputText value="#{contact.lastName}"/>
+                </p:column>
+                <p:column headerText="Middle Name" filterBy="#{contact.middleName}">
+                    <h:outputText value="#{contact.middleName}"/>
+                </p:column>
+                <p:column headerText="Mobile Phone" filterBy="#{contact.mobilePhone}">
+                    <h:outputText value="#{contact.mobilePhone}"/>
+                </p:column>
+                <p:column headerText="Work Phone" filterBy="#{contact.workPhone}">
+                    <h:outputText value="#{contact.workPhone}"/>
+                </p:column>
+                <p:column headerText="Home Phone" filterBy="#{contact.homePhone}">
+                    <h:outputText value="#{contact.homePhone}"/>
+                </p:column>
+                <p:column>
+                    <p:commandButton icon="pi pi-pencil" update=":form:manage-contact-content"
+                                     oncomplete="PF('manageContactDialog').show()"
+                                     styleClass="edit-button rounded-button ui-button-success" process="@this">
+                        <f:setPropertyActionListener value="#{contact}" target="#{contactBean.selectedContact}"/>
+                        <p:resetInput target=":form:manage-contact-content"/>
+                    </p:commandButton>
+                <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash" process="@this"
+                                 oncomplete="PF('deleteContactDialog').show()">
+                    <f:setPropertyActionListener value="#{contact}" target="#{contactBean.selectedContact}"/>
+                </p:commandButton>
+            </p:column>
+            </p:dataTable>
+
+            <p:dialog header="Contact Details" showEffect="fade" modal="true"
+                      widgetVar="manageContactDialog" responsive="true">
+                <p:outputPanel id="manage-contact-content" class="ui-fluid">
+                    <p:outputPanel rendered="#{not empty contactBean.selectedContact}">
+                        <div class="p-field">
+                            <p:outputLabel for="firstName">First Name</p:outputLabel>
+                            <p:inputText id="firstName" value="#{contactBean.selectedContact.firstName}" required="true"/>
+                        </div>
+                        <div class="p-field">
+                            <p:outputLabel for="lastName">Last Name</p:outputLabel>
+                            <p:inputText id="lastName" value="#{contactBean.selectedContact.lastName}" required="true"/>
+                        </div>
+                        <div class="p-field">
+                            <p:outputLabel for="middleName">Middle Name</p:outputLabel>
+                            <p:inputText id="middleName" value="#{contactBean.selectedContact.middleName}"/>
+                        </div>
+                        <div class="p-field">
+                            <p:outputLabel for="mobilePhone">Mobile Phone</p:outputLabel>
+                            <p:inputTextarea id="mobilePhone" value="#{contactBean.selectedContact.mobilePhone}" required="true"/>
+                        </div>
+                        <div class="p-field">
+                            <p:outputLabel for="workPhone">Work Phone</p:outputLabel>
+                            <p:inputTextarea id="workPhone" value="#{contactBean.selectedContact.workPhone}"/>
+                        </div>
+                        <div class="p-field">
+                            <p:outputLabel for="homePhone">Home Phone</p:outputLabel>
+                            <p:inputTextarea id="homePhone" value="#{contactBean.selectedContact.homePhone}"/>
+                        </div>
+                    </p:outputPanel>
+                </p:outputPanel>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Save" icon="pi pi-check" actionListener="#{contactBean.saveContact}"
+                                     update="manage-contact-content" process="manage-contact-content @this"/>
+                    <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageContactDialog').hide()"
+                                     class="ui-button-secondary"/>
+                </f:facet>
+            </p:dialog>
+
+            <p:confirmDialog widgetVar="deleteContactDialog" showEffect="fade" width="300"
+                             message="Delete the contact?" header="Confirm" severity="warn">
+                <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{contactBean.deleteContact}"
+                                 process="@this" oncomplete="PF('deleteContactDialog').hide()"/>
+                <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                 onclick="PF('deleteContactDialog').hide()"/>
+            </p:confirmDialog>
+
+            <p:confirmDialog global="true" showEffect="fade" width="300">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                 icon="pi pi-times"/>
+            </p:confirmDialog>
+        </div>
+    </h:form>
+</h:body>
+</html>
+
