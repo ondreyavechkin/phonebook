@@ -23,13 +23,18 @@
                 </p:toolbarGroup>
             </p:toolbar>
 
-            <p:dataTable id="dt-contacts" widgetVar="dtContacts" var="contact" value="#{contactBean.contacts}"
+            <p:dataTable id="dt-contacts" widgetVar="dtContacts" var="contact" value="#{contactBean.model}"
                          reflow="true" styleClass="contacts-table"
                          disabledSelection="true" rowKey="#{contactBean.mobilePhone}" paginator="true"
                          rows="3" paginatorPosition="bottom">
                 <f:facet name="header">
                     <div class="contacts-table-header">
                         <span style="font-weight: bold">CONTACTS</span>
+
+                        <span class="filter-container ui-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <p:inputText id="globalFilter"  onkeyup="PF('dtContacts').filter()" placeholder="Search"/>
+                        </span>
                     </div>
                 </f:facet>
 
